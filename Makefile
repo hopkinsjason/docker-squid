@@ -1,12 +1,13 @@
 # Project variables
 export PROJECT_NAME ?= squid
-ORG_NAME ?= dockerproductionaws
+ORG_NAME ?= hec
 REPO_NAME ?= squid
-DOCKER_REGISTRY ?= xxxxxxxxxxxx.dkr.ecr.us-west-2.amazonaws.com
-AWS_ACCOUNT_ID ?= xxxxxxxxxxxx
-DOCKER_LOGIN_EXPRESSION ?= $$(aws ecr get-login --registry-ids $(AWS_ACCOUNT_ID) --no-include-email)
+DOCKER_REGISTRY ?= 354031508802.dkr.ecr.eu-west-1.amazonaws.com
+AWS_ACCOUNT_ID ?= 354031508802
+DOCKER_LOGIN_EXPRESSION ?= aws ecr get-login-password | docker login --username AWS --password-stdin  $(DOCKER_REGISTRY)
 
 # Release settings
+export AWS_REGIONS ?= eu-west-1
 export SQUID_WHITELIST ?= 
 export NO_WHITELIST ?= false
 
@@ -63,7 +64,8 @@ publish:
 # Login to Docker registry
 login:
 	${INFO} "Logging in to Docker registry $$DOCKER_REGISTRY..."
-	@ eval $(DOCKER_LOGIN_EXPRESSION)
+	${INFO} "Docker login commnd: $(DOCKER_LOGIN_EXPRESSION)"
+	@ $(DOCKER_LOGIN_EXPRESSION)
 	${INFO} "Logged in to Docker registry $$DOCKER_REGISTRY"
 
 # Logout of Docker registry
